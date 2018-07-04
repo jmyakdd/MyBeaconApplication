@@ -147,6 +147,9 @@ class MyService : Service() {
         if (device.major != 10002 && device.major != 3333) {
             return false
         }
+        if(device.minor != 5209 && device.minor != 5207){
+            return false
+        }
         for (i in mLeDevices.indices) {
             val btAddress = mLeDevices[i].bluetoothAddress
             if (btAddress == device.bluetoothAddress) {
