@@ -3,10 +3,8 @@ package demo.jmy.com.mybeaconapplication
 import android.app.Service
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Handler
 import android.os.IBinder
 import android.os.Message
@@ -15,7 +13,6 @@ import android.widget.Toast
 import java.util.*
 
 class MyService : Service() {
-    private lateinit var sendUtil:DataSendUtil
     private var handler = object : Handler() {
         override fun handleMessage(msg: Message?) {
             super.handleMessage(msg)
@@ -32,8 +29,6 @@ class MyService : Service() {
     override fun onCreate() {
         super.onCreate()
         Log.e("test", "onCreate")
-        sendUtil = DataSendUtil()
-        initReceiver()
         Thread(object : Runnable {
             override fun run() {
                 try {
@@ -53,45 +48,7 @@ class MyService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         MyLogUtil.writeCustomLog("service destroy")
-        unregisterReceiver(receiver)
         stopSearchBluetooth()
-    }
-
-    private fun initReceiver() {
-        var filter = IntentFilter()
-        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
-        filter.addAction(Intent.ACTION_SCREEN_ON)
-        filter.addAction(Intent.ACTION_SCREEN_OFF)
-        filter.addAction("com.public.equipment.USER_INFO")
-        registerReceiver(receiver, filter)
-    }
-
-    var receiver = object : BroadcastReceiver() {
-        override fun onReceive(p0: Context?, p1: Intent?) {
-            var action = p1!!.action as String
-            Log.e("test",action)
-            when (action) {
-                BluetoothAdapter.ACTION_STATE_CHANGED -> {
-                    var bluetoothState = p1.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0)
-                    when (bluetoothState) {
-                        BluetoothAdapter.STATE_TURNING_ON -> {
-                            Log.e("test", "打开蓝牙中...")
-                        }
-                        BluetoothAdapter.STATE_ON -> {
-                            Log.e("test", "已打开蓝牙")
-                            searchBluetooth()
-                        }
-                        BluetoothAdapter.STATE_TURNING_OFF -> {
-                            Log.e("test", "关闭蓝牙中...")
-                            stopSearchBluetooth()
-                        }
-                        BluetoothAdapter.STATE_OFF -> {
-                            Log.e("test", "已关闭蓝牙")
-                        }
-                    }
-                }
-            }
-        }
     }
 
     lateinit var mBluetoothAdapter: BluetoothAdapter
@@ -111,6 +68,7 @@ class MyService : Service() {
                 for (d in mLeDevices) {
                     msg += d.major.toString() + " " + d.minor + " " + d.rssi + " " + d.txPower + "\n"
                 }
+//                DataSendUtil.sendData(msg.toByteArray())
                 handMessage("收到设备：" + msg)
                 MyLogUtil.writeCustomLog("收到设备：" + msg)
 //                stopSearchBluetooth()
