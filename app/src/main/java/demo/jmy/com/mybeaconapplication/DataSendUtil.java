@@ -1,5 +1,7 @@
 package demo.jmy.com.mybeaconapplication;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -19,11 +21,12 @@ public class DataSendUtil {
         executor = Executors.newSingleThreadExecutor();
         try {
             socket = new DatagramSocket(7088);
-            address = InetAddress.getByName("192.168.154.178");
+            address = InetAddress.getByName("192.168.2.134");
         } catch (SocketException e) {
             e.printStackTrace();
         } catch (UnknownHostException e) {
             e.printStackTrace();
+            Log.e("test",e.toString());
         }
     }
 
@@ -33,11 +36,12 @@ public class DataSendUtil {
             public void run() {
                 try {
                     packet = new DatagramPacket(data, data.length);
-                    packet.setPort(7088);
+                    packet.setPort(5066);
                     packet.setAddress(address);
                     socket.send(packet);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    Log.e("test",e.toString());
                 }
             }
         });

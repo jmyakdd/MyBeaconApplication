@@ -13,11 +13,16 @@ import android.widget.Toast
 import java.util.*
 
 class MyService : Service() {
+
+    private var imei: String? = null
+    private var id: String? = null
+    private var isStart = false
+
     private var handler = object : Handler() {
         override fun handleMessage(msg: Message?) {
             super.handleMessage(msg)
             if (msg != null) {
-                Toast.makeText(this@MyService, msg.obj.toString(), Toast.LENGTH_LONG).show()
+                Toast.makeText(this@MyService, msg.obj.toString(), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -28,17 +33,50 @@ class MyService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.e("test", "onCreate")
+        isStart = true
+
+        imei = SystemInfoUtil.getIMEI(this)
+        id = SystemInfoUtil.getDeviceId(imei)
+
         Thread(object : Runnable {
             override fun run() {
-                try {
-                    Thread.sleep(20 * 1000)
-                } catch (e: Exception) {
+                startUpLoad()
+                while (isStart) {
+                    searchBluetooth()
+                    try {
+                        Thread.sleep(10 * 1000)
+                    } catch (e: Exception) {
 
+                    }
+                    stopSearchBluetooth()
+                    try {
+                        Thread.sleep(1 * 1000)
+                    } catch (e: Exception) {
+
+                    }
                 }
-                searchBluetooth()
             }
         }).start()
+    }
+
+    private fun startUpLoad() {
+        var timer = Timer()
+        timer.schedule(object : TimerTask() {
+            override fun run() {
+                synchronized(mLeDevices) {
+                    var msg = id + ":\n"
+                    for (d in mLeDevices) {
+                        msg += d.major.toString() + " " + d.minor + " " + d.rssi + " " + d.txPower + "\n"
+                    }
+                    if (msg != null && !msg.equals(""))
+                        DataSendUtil.sendData(msg.toByteArray())
+//                    handMessage("收到设备：" + msg)
+                    Log.e("test", "收到设备：" + " " + msg)
+//                    MyLogUtil.writeCustomLog("收到设备：" + msg)
+                    mLeDevices.clear()
+                }
+            }
+        }, 0, 2000)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -47,7 +85,6 @@ class MyService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        MyLogUtil.writeCustomLog("service destroy")
         stopSearchBluetooth()
     }
 
@@ -56,25 +93,10 @@ class MyService : Service() {
     private fun stopSearchBluetooth() {
         if (mBluetoothAdapter != null) {
             mBluetoothAdapter.stopLeScan(mLeScanCallback)
-            mLeDevices.clear()
         }
     }
 
     fun searchBluetooth() {
-        var timer = Timer()
-        timer.schedule(object : TimerTask() {
-            override fun run() {
-                var msg = ""
-                for (d in mLeDevices) {
-                    msg += d.major.toString() + " " + d.minor + " " + d.rssi + " " + d.txPower + "\n"
-                }
-//                DataSendUtil.sendData(msg.toByteArray())
-                handMessage("收到设备：" + msg)
-                MyLogUtil.writeCustomLog("收到设备：" + msg)
-//                stopSearchBluetooth()
-                mLeDevices.clear()
-            }
-        }, 0, 7000)
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         mBluetoothAdapter = bluetoothManager.adapter
         if (mBluetoothAdapter == null) {
@@ -101,19 +123,19 @@ class MyService : Service() {
         })
         //
     }
-
     private val mLeDevices = ArrayList<iBeaconClass.iBeacon>()
     private fun addDevice(device: iBeaconClass.iBeacon?): Boolean { //更新beacon信息
         if (device == null) {
             Log.d("DeviceScanActivity ", "device==null ")
             return false
         }
-        if (device.major != 10002 && device.major != 3333) {
+        if (device.major != 10002 && device.major != 3333 && device.major != 1020) {
             return false
         }
-        if (device.minor != 5209 && device.minor != 5207) {
+        if (device.minor != 5209 && device.minor != 5207 && device.minor != 4080) {
             return false
         }
+
         for (i in mLeDevices.indices) {
             val btAddress = mLeDevices[i].bluetoothAddress
             if (btAddress == device.bluetoothAddress) {

@@ -18,7 +18,7 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
-class Main3Activity : AppCompatActivity() {
+class BeaconSearchViewActivity : AppCompatActivity() {
     var permissions = arrayOf(Manifest.permission.BLUETOOTH,
             Manifest.permission.BLUETOOTH_ADMIN,
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -119,7 +119,7 @@ class Main3Activity : AppCompatActivity() {
         }
         mBluetoothAdapter.startLeScan(mLeScanCallback)
     }
-
+    private var count = 0
     private val mLeScanCallback = BluetoothAdapter.LeScanCallback { device, rssi, scanRecord ->
         val ibeacon = iBeaconClass.fromScanData(device, rssi, scanRecord)
         if (!addDevice(ibeacon)) {
@@ -131,6 +131,8 @@ class Main3Activity : AppCompatActivity() {
             }
         })
         rv.adapter!!.notifyDataSetChanged()
+        Log.e("test",count.toString())
+        count++
     }
 
     private val mLeDevices = ArrayList<iBeaconClass.iBeacon>()

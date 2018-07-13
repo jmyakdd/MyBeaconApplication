@@ -19,7 +19,7 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class Main2Activity : AppCompatActivity() {
+class BluetoothSearchActivity : AppCompatActivity() {
     var permissions = arrayOf(Manifest.permission.BLUETOOTH,
             Manifest.permission.BLUETOOTH_ADMIN,
             Manifest.permission.ACCESS_COARSE_LOCATION,
