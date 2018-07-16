@@ -64,19 +64,18 @@ class MyService : Service() {
         timer.schedule(object : TimerTask() {
             override fun run() {
                 synchronized(mLeDevices) {
-                    var msg = id + ":\n"
-                    for (d in mLeDevices) {
-                        msg += d.major.toString() + " " + d.minor + " " + d.rssi + " " + d.txPower + "\n"
+                    if (mLeDevices.size >= 3) {
+                        var msg = id + ":\n"
+                        for (d in mLeDevices) {
+                            msg += d.major.toString() + " " + d.minor + " " + d.rssi + " " + d.txPower + "\n"
+                        }
+                        if (msg != null && !msg.equals(""))
+                            DataSendUtil.sendData(msg.toByteArray())
                     }
-                    if (msg != null && !msg.equals(""))
-                        DataSendUtil.sendData(msg.toByteArray())
-//                    handMessage("收到设备：" + msg)
-                    Log.e("test", "收到设备：" + " " + msg)
-//                    MyLogUtil.writeCustomLog("收到设备：" + msg)
                     mLeDevices.clear()
                 }
             }
-        }, 0, 2000)
+        }, 0, 1000)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -101,7 +100,6 @@ class MyService : Service() {
         mBluetoothAdapter = bluetoothManager.adapter
         if (mBluetoothAdapter == null) {
             MyLogUtil.writeCustomLog("设备没有蓝牙模块")
-//            Toast.makeText(this,"设备没有蓝牙模块", Toast.LENGTH_SHORT).show()
             return
         }
         if (!mBluetoothAdapter.isEnabled) {

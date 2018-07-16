@@ -21,7 +21,7 @@ public class DataSendUtil {
         executor = Executors.newSingleThreadExecutor();
         try {
             socket = new DatagramSocket(7088);
-            address = InetAddress.getByName("192.168.2.134");
+            address = InetAddress.getByName("192.168.2.132");
         } catch (SocketException e) {
             e.printStackTrace();
         } catch (UnknownHostException e) {
