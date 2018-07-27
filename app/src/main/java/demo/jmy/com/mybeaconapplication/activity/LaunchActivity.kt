@@ -1,4 +1,4 @@
-package demo.jmy.com.mybeaconapplication
+package demo.jmy.com.mybeaconapplication.activity
 
 import android.Manifest
 import android.app.Activity
@@ -7,16 +7,15 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import demo.jmy.com.mybeaconapplication.service.MyService
 
-class MainActivity : Activity() {
-
+class LaunchActivity : Activity() {
     var permissions = arrayOf(Manifest.permission.BLUETOOTH,
             Manifest.permission.BLUETOOTH_ADMIN,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_PHONE_STATE,
-            Manifest.permission.ACCESS_FINE_LOCATION)
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,18 +34,5 @@ class MainActivity : Activity() {
     override fun onResume() {
         super.onResume()
         finish()
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 100) {
-            for (i in grantResults) {
-                if (i == PackageManager.PERMISSION_GRANTED) {
-                    continue
-                } else {
-                    return
-                }
-            }
-        }
     }
 }

@@ -1,4 +1,4 @@
-package demo.jmy.com.mybeaconapplication;
+package demo.jmy.com.mybeaconapplication.util;
 
 import android.os.Environment;
 

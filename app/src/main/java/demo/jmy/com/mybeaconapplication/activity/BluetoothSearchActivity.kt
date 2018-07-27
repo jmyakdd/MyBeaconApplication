@@ -1,4 +1,4 @@
-package demo.jmy.com.mybeaconapplication
+package demo.jmy.com.mybeaconapplication.activity
 
 import android.Manifest
 import android.app.ProgressDialog
@@ -16,6 +16,8 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.widget.Toast
+import demo.jmy.com.mybeaconapplication.R
+import demo.jmy.com.mybeaconapplication.adapter.MyBluetooth1Adapter
 import kotlinx.android.synthetic.main.activity_main.*
 
 

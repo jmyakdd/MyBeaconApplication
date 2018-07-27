@@ -1,4 +1,4 @@
-package demo.jmy.com.mybeaconapplication;
+package demo.jmy.com.mybeaconapplication.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.skybeacon.sdk.locate.SKYBeacon;
 
 import java.util.List;
+
+import demo.jmy.com.mybeaconapplication.R;
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> {
     private Context context;

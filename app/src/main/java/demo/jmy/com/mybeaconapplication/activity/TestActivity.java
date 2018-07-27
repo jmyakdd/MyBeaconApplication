@@ -1,4 +1,4 @@
-package demo.jmy.com.mybeaconapplication;
+package demo.jmy.com.mybeaconapplication.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +15,9 @@ import com.skybeacon.sdk.locate.SKYRegion;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import demo.jmy.com.mybeaconapplication.R;
+import demo.jmy.com.mybeaconapplication.adapter.MenuAdapter;
 
 public class TestActivity extends AppCompatActivity {
     private static final SKYRegion ALL_SEEKCY_BEACONS_REGION = new SKYRegion("rid_all", null, null, null, null);

@@ -1,4 +1,4 @@
-package demo.jmy.com.mybeaconapplication;
+package demo.jmy.com.mybeaconapplication.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
+
+import demo.jmy.com.mybeaconapplication.R;
+import demo.jmy.com.mybeaconapplication.bean.iBeaconClass;
 
 public class MyBluetoothAdapter extends RecyclerView.Adapter<MyBluetoothAdapter.ViewHolder> {
     private List<iBeaconClass.iBeacon>data;

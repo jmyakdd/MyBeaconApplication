@@ -1,4 +1,4 @@
-package demo.jmy.com.mybeaconapplication;
+package demo.jmy.com.mybeaconapplication.util;
 
 import android.Manifest;
 import android.content.Context;
@@ -20,7 +20,7 @@ public class SystemInfoUtil {
     }
 
     public static String getDeviceId(String imei) {
-        String id = "ss";
+        String id = "222222";
         String path = Environment.getExternalStorageDirectory().getAbsolutePath();
         File file = new File(path);
         File[] files = file.listFiles();

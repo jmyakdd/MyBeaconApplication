@@ -1,4 +1,4 @@
-package demo.jmy.com.mybeaconapplication
+package demo.jmy.com.mybeaconapplication.activity
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
@@ -15,6 +15,9 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.widget.Toast
+import demo.jmy.com.mybeaconapplication.R
+import demo.jmy.com.mybeaconapplication.adapter.MyBluetoothAdapter
+import demo.jmy.com.mybeaconapplication.bean.iBeaconClass
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
@@ -119,20 +122,18 @@ class BeaconSearchViewActivity : AppCompatActivity() {
         }
         mBluetoothAdapter.startLeScan(mLeScanCallback)
     }
-    private var count = 0
+
     private val mLeScanCallback = BluetoothAdapter.LeScanCallback { device, rssi, scanRecord ->
         val ibeacon = iBeaconClass.fromScanData(device, rssi, scanRecord)
         if (!addDevice(ibeacon)) {
             return@LeScanCallback
         }
-        Collections.sort(mLeDevices, object : Comparator<iBeaconClass.iBeacon> {
+        /*Collections.sort(mLeDevices, object : Comparator<iBeaconClass.iBeacon> {
             override fun compare(h1: iBeaconClass.iBeacon, h2: iBeaconClass.iBeacon): Int {
                 return h2.rssi - h1.rssi
             }
-        })
+        })*/
         rv.adapter!!.notifyDataSetChanged()
-        Log.e("test",count.toString())
-        count++
     }
 
     private val mLeDevices = ArrayList<iBeaconClass.iBeacon>()
@@ -141,12 +142,12 @@ class BeaconSearchViewActivity : AppCompatActivity() {
             Log.d("DeviceScanActivity ", "device==null ")
             return false
         }
-        if (device.major != 10002 && device.major != 3333) {
+        if (device.major != 20000&&device.major!=10002) {
             return false
         }
-        if(device.minor != 5209 && device.minor != 5207){
+        /*if(device.minor != 5209 && device.minor != 5207){
             return false
-        }
+        }*/
         for (i in mLeDevices.indices) {
             val btAddress = mLeDevices[i].bluetoothAddress
             if (btAddress == device.bluetoothAddress) {

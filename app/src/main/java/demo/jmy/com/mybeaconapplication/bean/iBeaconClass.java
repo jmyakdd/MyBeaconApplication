@@ -1,6 +1,9 @@
-package demo.jmy.com.mybeaconapplication;
+package demo.jmy.com.mybeaconapplication.bean;
 
 import android.bluetooth.BluetoothDevice;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class iBeaconClass {
  
@@ -12,6 +15,7 @@ public class iBeaconClass {
     	public String bluetoothAddress;
     	public int txPower;
     	public int rssi;
+    	public double d;
 
 		@Override
 		public String toString() {
@@ -22,6 +26,7 @@ public class iBeaconClass {
 					", proximityUuid='" + proximityUuid + '\'' +
 					", bluetoothAddress='" + bluetoothAddress + '\'' +
 					", txPower=" + txPower +
+					", d=" + d +
 					", rssi=" + rssi +
 					'}';
 		}
@@ -106,6 +111,8 @@ public class iBeaconClass {
             iBeacon.bluetoothAddress = device.getAddress();
             iBeacon.name = device.getName()!=null&&!device.getName().equals("")?device.getName():"未知设备";
         }
+		BigDecimal bg = new BigDecimal(Math.pow(10,(Math.abs(rssi)-Math.abs(iBeacon.txPower))/20.0d)).setScale(2, RoundingMode.UP);
+		iBeacon.d = bg.doubleValue();
  
 		return iBeacon;
 	}
