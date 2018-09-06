@@ -32,7 +32,7 @@ public class DataSendUtil {
                 try {
                     packet = new DatagramPacket(data, data.length);
                     packet.setPort(7983);
-                    packet.setAddress(InetAddress.getByName("192.168.2.133"));
+                    packet.setAddress(InetAddress.getByName("192.168.43.235"));
                     socket.send(packet);
                 } catch (IOException e) {
                     e.printStackTrace();

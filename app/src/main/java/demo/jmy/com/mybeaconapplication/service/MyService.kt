@@ -36,9 +36,6 @@ class MyService : Service() {
         super.onCreate()
         isStart = true
 
-        imei = SystemInfoUtil.getIMEI(this)
-        id = SystemInfoUtil.getDeviceId(imei)
-
         Thread(object : Runnable {
             override fun run() {
                 while (isStart) {
@@ -48,6 +45,7 @@ class MyService : Service() {
                     } catch (e: Exception) {
                         MyLogUtil.writeCustomLog(e.toString())
                         Log.e("test", e.toString())
+                        continue
                     }
                     try {
                         stopSearchBluetooth()
@@ -55,6 +53,7 @@ class MyService : Service() {
                     } catch (e: Exception) {
                         MyLogUtil.writeCustomLog(e.toString())
                         Log.e("test", e.toString())
+                        continue
                     }
                 }
             }
@@ -69,15 +68,11 @@ class MyService : Service() {
                     var copyList = beaconInfoList.clone() as ArrayList<BeaconInfo>
                     var sendData = ArrayList<SendInfoBean.BeaconInfo>()
 
-                    Log.e("test","--------------------")
-                    for(ss in copyList){
-                        Log.e("test",ss.toString())
-                    }
-                    Log.e("test","--------------------")
-                    if (copyList.size >= 3) {
+
+                    if (copyList.size >= 2) {
                         var count = 0
                         for (d in copyList) {
-                            if (count >= 3) {
+                            if (count >= 2) {
                                 break
                             }
                             count++
@@ -86,6 +81,10 @@ class MyService : Service() {
                         }
                         if (sendData.size != 0) {
                             var msg = listToJson(sendData)
+                            MyLogUtil.writeCustomLog(msg)
+                            Log.e("test", "--------------------")
+                            Log.e("test", msg)
+                            Log.e("test", "--------------------")
                             DataSendUtil.sendData(msg.toByteArray())
                         }
                     }
@@ -132,6 +131,8 @@ class MyService : Service() {
         }
         mBluetoothAdapter.startLeScan(mLeScanCallback)
         if (!isStartUpLoad) {
+            imei = SystemInfoUtil.getIMEI(this)
+            id = SystemInfoUtil.getDeviceId(imei)
             isStartUpLoad = true
             startUpLoad()
         }
